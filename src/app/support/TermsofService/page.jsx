@@ -1,9 +1,9 @@
 "use client";
 
-import React from 'react';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import "../../globals.css";
+import React, { useState } from "react";
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import "../globals.css";
 
 const TermsOfService = () => {
   return (

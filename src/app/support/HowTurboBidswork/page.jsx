@@ -1,9 +1,9 @@
 "use client";
 
-import React from 'react';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import "../../globals.css";
+import React, { useState } from "react";
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import "../globals.css";
 
 const features = [
   { id: 1, icon: '🔍', title: 'View Before You Bid', description: 'Want to see a vehicle in person? Visit a Turbobids location to view a vehicle before you bid.' },
