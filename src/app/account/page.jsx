@@ -1,12 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Input } from '../components/ui/input';
-import { Button } from '../components/ui/button';
+import React, { useState } from "react";
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import "../globals.css";
 
-export function AccountSettings() {
+export default function AccountSetting() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -14,7 +13,7 @@ export function AccountSettings() {
     email: "",
     currentPassword: "",
     newPassword: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {
@@ -24,93 +23,113 @@ export function AccountSettings() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle the form submission here
-    console.log("Form Data Submitted:", formData);
+    console.log("Saved Data:", formData);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 ">
-      <div className=''>
-        <Navbar />
-      </div>
-      <div className="max-w-3xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 py-4">Account Settings</h1>
-        
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <h2 className="text-xl font-semibold">Personal Information</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-              <Input
-                label="First Name"
-                id="firstName"
-                name="firstName"
-                placeholder="John"
-                value={formData.firstName}
+    <div className="min-h-screen bg-gray-100 font-happy text-lg">
+      {/* Navbar */}
+      <Navbar />
+      <div className="flex justify-center items-center py-10">
+        <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8">
+          {/* Profile Image */}
+          <div className="flex justify-center mb-6">
+            <div className="w-24 h-24 bg-gray-300 rounded-full"></div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-gray-700 mb-2">First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className="w-full border rounded-lg p-3 focus:outline-blue-400"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-2">Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className="w-full border rounded-lg p-3 focus:outline-blue-400"
+                />
+              </div>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Display Name</label>
+              <input
+                type="text"
+                name="displayName"
+                value={formData.displayName}
                 onChange={handleChange}
-              />
-              <Input
-                label="Last Name"
-                id="lastName"
-                name="lastName"
-                placeholder="Doe"
-                value={formData.lastName}
-                onChange={handleChange}
+                className="w-full border rounded-lg p-3 focus:outline-blue-400"
               />
             </div>
-            <Input
-              label="Display Name"
-              id="displayName"
-              name="displayName"
-              placeholder="johndoe"
-              value={formData.displayName}
-              onChange={handleChange}
-            />
-            <Input
-              label="Email"
-              id="email"
-              name="email"
-              type="email"
-              placeholder="john@example.com"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            
-            <h2 className="text-xl font-semibold mt-8">Security</h2>
-            <Input
-              label="Current Password"
-              id="currentPassword"
-              name="currentPassword"
-              type="password"
-              value={formData.currentPassword}
-              onChange={handleChange}
-            />
-            <Input
-              label="New Password"
-              id="newPassword"
-              name="newPassword"
-              type="password"
-              value={formData.newPassword}
-              onChange={handleChange}
-            />
-            <Input
-              label="Confirm New Password"
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
+            <div className="mb-6">
+              <label className="block text-gray-700 mb-2">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full border rounded-lg p-3 focus:outline-blue-400"
+              />
+            </div>
+
+            {/* Password Change Section */}
+            <h2 className="font-bold text-xl mb-4">Password Change</h2>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Current Password</label>
+              <input
+                type="password"
+                name="currentPassword"
+                value={formData.currentPassword}
+                onChange={handleChange}
+                className="w-full border rounded-lg p-3 focus:outline-blue-400"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">New Password</label>
+              <input
+                type="password"
+                name="newPassword"
+                value={formData.newPassword}
+                onChange={handleChange}
+                className="w-full border rounded-lg p-3 focus:outline-blue-400"
+              />
+            </div>
+            <div className="mb-6">
+              <label className="block text-gray-700 mb-2">Confirm Password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full border rounded-lg p-3 focus:outline-blue-400"
+              />
+            </div>
+
+            {/* Save Button */}
             <div className="flex justify-center">
-              <Button type="submit">Save Changes</Button>
+              <button
+                type="submit"
+                className="bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition"
+              >
+                Save Changes
+              </button>
             </div>
           </form>
         </div>
       </div>
-      <div className='py-4'>
-        <Footer />
-      </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
-
-export default AccountSettings;
