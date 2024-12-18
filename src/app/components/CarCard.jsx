@@ -13,85 +13,69 @@ const CarCard = ({
   onFavoriteToggle,
 }) => {
   const [timeLeft, setTimeLeft] = useState(countdownTime);
-  const [isFavorited, setIsFavorited] = useState(false); // สถานะสำหรับ Favorite
-  const userID = getUserIdFromToken(); // ดึง user_id ออกจาก token
+  const [isFavorited, setIsFavorited] = useState(false); 
+  const userID = getUserIdFromToken(); 
 
-  // ฟังก์ชันแปลงเวลาเป็นนาที:วินาที
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
-  };
 
   const userToken = localStorage.getItem('token');
 
-  // เช็คสถานะ Favorite จากเซิร์ฟเวอร์
+
   const checkFavoriteStatus = async (carID) => {
     try {
       const response = await axios.post(
         "http://localhost:9500/favorites/status",
         {
-          car_ID: carID, // ส่ง car_ID ใน body
-          userID: userID, // ส่ง user_id ที่ดึงมาจาก token
+          car_ID: carID, 
+          userID: userID, 
         },
       );
       
-      // ตั้งค่า isFavorited จากข้อมูลที่ได้รับ
+
       setIsFavorited(response.data.favorite_status || false);
     } catch (error) {
-      console.error("เกิดข้อผิดพลาดในการดึงสถานะรายการโปรด", error);
-      setIsFavorited(false); // รีเซ็ตสถานะเป็น false ในกรณีเกิดข้อผิดพลาด
+      console.error("fail pull status", error);
+      setIsFavorited(false); 
     }
   };
   useEffect(() => {
-    console.log("car_ID changed:", car_ID);
-    console.log("userToken changed:", userToken);
+    // console.log("car_ID changed:", car_ID);
+    // console.log("userToken changed:", userToken);
   }, [car_ID, userToken]);
   
-  // โหลดสถานะ Favorite เมื่อ `car_ID` หรือ `userToken` เปลี่ยน
+
   useEffect(() => {
-    setIsFavorited(false); // รีเซ็ตสถานะเริ่มต้น
+    setIsFavorited(false); 
     if (userToken && car_ID) {
-      checkFavoriteStatus(car_ID); // โหลดสถานะใหม่
+      checkFavoriteStatus(car_ID);
     }
   }, [car_ID, userToken]);
 
   // จัดการ Favorite
   const handleFavoriteClick = async () => {
     const newFavoriteStatus = !isFavorited;
-    setIsFavorited(newFavoriteStatus); // เปลี่ยนสถานะ favorite ก่อน
+    setIsFavorited(newFavoriteStatus); 
 
     try {
-      // ส่ง car_ID และ user_id ไปพร้อมกับ request
+ 
       const response = await axios.post(
         "http://localhost:9500/favorites",
         {
-          car_ID: car_ID, // ส่ง car_ID ที่ต้องการ favorite
-          userID: userID, // ส่ง user_id ที่ดึงมาจาก token
+          car_ID: car_ID, 
+          userID: userID, 
         },
       );
-      console.log(response.data); // Log การตอบกลับจากเซิร์ฟเวอร์ หากต้องการ
+      // console.log(response.data); 
       // console.log(userID);
 
     } catch (error) {
       console.error("Error updating favorite status", error);
     }
 
-    // เรียก onFavoriteToggle ถ้ามี
     if (onFavoriteToggle) {
       onFavoriteToggle(car_ID, newFavoriteStatus);
     }
   };
 
-  // นับเวลาถอยหลัง
-  useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [timeLeft]);
 
   return (
     <div className="relative border rounded-3xl shadow-lg overflow-hidden max-w-sm bg-white">
@@ -123,8 +107,6 @@ const CarCard = ({
         <h2 className="text-2xl font-semibold">{carModel}</h2>
         {/* สถานะ */}
         <p className="text-lg text-gray-500 mt-2">{status}</p>
-        {/* เวลาเหลือ */}
-        <p className="text-lg font-semibold mt-4">Time left: {formatTime(timeLeft)}</p>
         {/* ปุ่ม View Details */}
         <div className="flex justify-center mt-6">
           <a
