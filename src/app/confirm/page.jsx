@@ -1,22 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
-import Navbar from '../../../src/app/components/Navbar'
-import Footer from '../../../src/app/components/Footer'
+import { useRouter } from "next/navigation"; // Import useRouter
+import Navbar from '../../../src/app/components/Navbar';
+import Footer from '../../../src/app/components/Footer';
 import "../globals.css";
 
 function ConfirmAuction() {
   const [selectedOption, setSelectedOption] = useState("Confirm");
   const [errorText, setErrorText] = useState("");
+  const router = useRouter(); // สร้าง router instance
 
   const handleSubmit = () => {
     // ตรวจสอบว่าเลือกยืนยันหรือรายงานการแก้ไข
     if (selectedOption === "Confirm") {
       alert("Auction confirmed!"); // ตัวอย่างการแจ้งเตือนเมื่อยืนยัน
-      // สามารถเพิ่มการส่งข้อมูลหรือเปลี่ยนเส้นทางที่นี่
+      router.push("/comment"); // เปลี่ยนเส้นทางไปหน้า comment
     } else if (selectedOption === "Report correction" && errorText.trim() !== "") {
       alert(`Reported correction: ${errorText}`); // ตัวอย่างการแจ้งเตือนเมื่อรายงานการแก้ไข
-      // สามารถเพิ่มการส่งข้อมูลหรือเปลี่ยนเส้นทางที่นี่
+      router.push("/comment"); // เปลี่ยนเส้นทางไปหน้า comment
     } else {
       alert("Please complete the form before submitting.");
     }
