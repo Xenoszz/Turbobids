@@ -194,64 +194,6 @@ function Page() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 mt-12 mb-24">
         {topCars.map((car) => (
-<<<<<<< Updated upstream
-        <CarCard
-          key={car.car_ID} // Use unique car ID as key
-          carImage={`https://via.placeholder.com/400x300?text=Car+Image`} // Placeholder image
-          carModel={`${car.car_brand} ${car.car_model} ${car.car_rear}`} // Car model info
-          status={"Current Bid : Start the bidding"} // Assuming you have a status field in the car data
-          countdownTime={3600} // Set your countdown time dynamically if needed
-          detailsLink={`/car-details/${car.car_ID}`} // Link to car details page
-          car_ID={car.car_ID}
-          onFavoriteToggle={handleFavoriteToggle}
-        />
-      ))}
-    </div>
-
-          <div className='flex justify-center bg-[#2A2F6E] rounded-3xl mt-10 mb-10 ml-40 mr-40'>
-            <div className='bg-white mt-8 mb-8 ml-6 px-6 py-4 rounded-3xl flex-col flex-1'>
-                <h2>What is Turbobids? </h2>
-                <h2>Copart is a global leader in 100% online car auctions featuring used, wholesale and repairable vehicles. 
-                We make it easy for Members to find, bid on, and win vehicles like classic car, boats, repo cars, ATVs, exotics, motorcycles and more. 
-                Copart car auctions have something for everyone — used car buyers, dismantlers, dealers, body shops and individuals. We even have “No License Required” 
-                vehicles available to individuals in public_auto auctions. We feature clean & salvage title cars, trucks, SUVs, motorcycles, heavy equipment & more in live 
-                online auto auctions every weekday. As a global used car auction company, Copart puts the power to bid and win into your hands. Sign up for a Basic or Premier 
-                Membership to start bidding and winning used car auctions.
-                </h2>
-            </div>
-
-            <div className='bg-white mt-10 mb-10 ml-20 mr-20 px-6 py-4 rounded-3xl flex-col flex-1'>
-                <h2>ตัวอย่างรีวิวที่เราได้รับจากลูกค้าจริง</h2>
-                <div className='bg-orange-200 rounded-3xl mt-2 mb-10 px-6 py-2 '>
-                  <div className='flex'>
-                    <h2>เสนอส สุดหล่อท่อดัง</h2>
-                      <div className='flex ml-10'>                    
-                        <Star size={20} color="#f27f21" strokeWidth={3} absoluteStrokeWidth />
-                        <Star size={20} color="#f27f21" strokeWidth={3} absoluteStrokeWidth />
-                        <Star size={20} color="#f27f21" strokeWidth={3} absoluteStrokeWidth />
-                        <Star size={20} color="#f27f21" strokeWidth={3} absoluteStrokeWidth />
-                        <Star size={20} color="#f27f21" strokeWidth={3} absoluteStrokeWidth />
-                      </div>
-                  </div>
-                    <div className='mt-4 space-y-4'>                   
-                        <h2>Honda Accord 2021</h2>
-                        <h2>13 OCT 2024</h2>
-                        <h2>บริการดีมากครับ รถสวยถูกใจ เงินในเป๋าแห้งเหือด ผมซื้อรถคันนี้แล้วชอบมากเลยครับ</h2>
-                    </div>
-
-                </div>
-            </div>
-
-          </div>
-
-
-
-  
-
-
-      <div>
-        <Footer />
-=======
           <CarCard
             key={car.car_ID}
             carImage={`/IMG/byd.JPG`}
@@ -262,7 +204,6 @@ function Page() {
             onFavoriteToggle={handleFavoriteToggle}
           />
         ))}
->>>>>>> Stashed changes
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 justify-center bg-[#2A2F6E] rounded-3xl mt-10 mb-10 p-6 lg:p-10">
