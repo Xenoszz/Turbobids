@@ -78,28 +78,28 @@ export default function FavoritePage() {
 
             {/* Dropdown เมนูการจัดเรียง */}
             {isSortingMenuOpen && (
-              <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-lg w-48">
+              <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-lg w-56">
                 <button
                   onClick={() => setSortOption('Year Ascending')}
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left"
+                  className="block px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 w-full text-center"
                 >
                   Year Ascending
                 </button>
                 <button
                   onClick={() => setSortOption('Year Descending')}
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left"
+                  className="block px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 w-full text-center"
                 >
                   Year Descending
                 </button>
                 <button
                   onClick={() => setSortOption('Current Bid Ascending')}
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left"
+                  className="block px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 w-full text-center"
                 >
                   Current Bid Ascending
                 </button>
                 <button
                   onClick={() => setSortOption('Current Bid Descending')}
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left"
+                  className="block px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 w-full text-center"
                 >
                   Current Bid Descending
                 </button>
