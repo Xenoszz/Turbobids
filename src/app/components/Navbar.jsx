@@ -3,88 +3,49 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import '../globals.css';
 import { useRouter } from "next/navigation";
+import { decodeToken } from '@/app/utils/auth';  
 
 export function Navbar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [dropdownVisible, setDropdownVisible] = useState(null); // สำหรับจัดการ dropdown
+  const [dropdownVisible, setDropdownVisible] = useState(null); 
   const router = useRouter();
   const dropdownRef = useRef(null);
 
 
-  //ตรวจสอบสถานะการล็อกอิน
   useEffect(() => {
-    //Mongo
-//     const checkAuth = async () => {
-//       try {
-//         const res = await fetch('http://localhost:5000/api/protected', {
-//           method: 'GET',
-//           credentials: 'include',
-//         });
-
-//         if (res.ok) {
-//           const data = await res.json();
-//           console.log('User authenticated:', data.user);
-//           setIsAuthenticated(true);
-//         } else {
-//           console.log('Authentication failed');
-//           setIsAuthenticated(false);
-//         }
-//       } catch (error) {
-//         console.error('Error verifying auth:', error);
-//         setIsAuthenticated(false);
-//       }
-//     };
-// }, []);
-
-    //Sql
-    const checkAuth = async () => {
-      try {
-        const res = await fetch('http://localhost:9500/api/protected', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          console.log('User authenticated:', data.user);
-          setIsAuthenticated(true);
-        } else {
-          console.log('Authentication failed');
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.error('Error verifying auth:', error);
-        setIsAuthenticated(true);
+    const checkToken = () => {
+      const decoded = decodeToken();  
+      if (decoded) {
+        // console.log('Token decoded:', decoded);
+        setIsAuthenticated(true);  
+      } else {
+        // console.log('No valid token');
+        setIsAuthenticated(false);  
       }
     };
-    checkAuth();
-  }, []);
+    
+    checkToken();
+  }, []);  
+
 
   const handleNavigation = (path) => {
     if (isAuthenticated) {
-      router.push(path);
+      router.push(path); 
     } else {
-      // router.push('/auth/login');
-      router.push(path); //Bypass
-      
+      router.push('/auth/login'); 
     }
   };
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const toggleDropdown = (menu) => {
-    setDropdownVisible((prev) => (prev === menu ? null : menu)); // เปิด/ปิด dropdown
+    setDropdownVisible((prev) => (prev === menu ? null : menu)); 
   };
 
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setDropdownVisible(null);
-    }
+
+  const handleSignOut = () => {
+    localStorage.removeItem('token'); 
+    setIsAuthenticated(false); 
+    router.push('/auth/login'); 
   };
 
   return (
@@ -134,30 +95,29 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Dropdown Support */}
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative">
             <button
-              onClick={() => toggleDropdown("support")}
+              onClick={() => toggleDropdown('support')}
               className="hover:text-orange-400"
             >
               Support
             </button>
-            {dropdownVisible === "support" && (
-              <div className="absolute top-full left-0 bg-white text-black rounded-md shadow-md p-2">
+            {dropdownVisible === 'support' && (
+              <div className="absolute top-full left-0 bg-white text-black rounded-md shadow-md p-2 z-20">
                 <button
-                  onClick={() => handleNavigation("/support/HowTurboBidswork")}
+                  onClick={() => handleNavigation('/support/HowTurboBidswork')}
                   className="block px-4 py-2 hover:bg-gray-200"
                 >
-                  How TurboBids Work
+                  How TurboBids work
                 </button>
                 <button
-                  onClick={() => handleNavigation("/support/CommonQuession")}
+                  onClick={() => handleNavigation('/support/CommonQuession')}
                   className="block px-4 py-2 hover:bg-gray-200"
                 >
                   Common Questions
                 </button>
                 <button
-                  onClick={() => handleNavigation("/support/TermsofService")}
+                  onClick={() => handleNavigation('/support/TermsofService')}
                   className="block px-4 py-2 hover:bg-gray-200"
                 >
                   Terms of Service
@@ -166,7 +126,7 @@ export function Navbar() {
             )}
           </div>
         </div>
-        
+
         <div ref={dropdownRef} className="flex items-center ml-auto">
         {isAuthenticated && (
           <div className="flex items-center ml-auto relative">
@@ -186,7 +146,7 @@ export function Navbar() {
                         className="text-1xl text-gray-800 font-bold hover:text-blue-500 w-full text-center"
                       >
                         The auction has ended.<br /> 
-                        You are the winner.<br />
+                        You are the winner!<br />
                         Please click this message <br />
                         to confirm your bid.
                       </button>
@@ -196,7 +156,7 @@ export function Navbar() {
                     <div className="flex items-center justify-center bg-gray-50 mb-2 rounded-lg p-4 shadow-sm">
                     <p className="text-1xl text-gray-800 w-full text-center">
                       Auction is nearing its end.<br />
-                      45 minutes remaining
+                      45 minutes remaining!
                     </p>
                     </div>
 
@@ -221,9 +181,9 @@ export function Navbar() {
                   <button onClick={() => { router.push('/auth/signout'); }} className="block mt-2 px-4 py-2 bg-red-500 text-white rounded-md">Sign Out</button>
                 </div>
               )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
         </div>
       </div>
     </nav>

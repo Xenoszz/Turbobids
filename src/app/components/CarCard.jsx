@@ -1,55 +1,97 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import {getUserIdFromToken} from "@/app/utils/auth";
 
-const CarCard = ({ id, carImage, carModel, status, countdownTime, detailsLink }) => {
+const CarCard = ({
+  car_ID,
+  carImage,
+  carModel,
+  status,
+  countdownTime,
+  detailsLink,
+  onFavoriteToggle,
+}) => {
   const [timeLeft, setTimeLeft] = useState(countdownTime);
-  const [isFavorited, setIsFavorited] = useState(false); // เพิ่ม state สำหรับ Favorite
+  const [isFavorited, setIsFavorited] = useState(false); 
+  const userID = getUserIdFromToken(); 
+
+
+  const userToken = localStorage.getItem('token');
+
+
+  const checkFavoriteStatus = async (carID) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:9500/favorites/status",
+        {
+          car_ID: carID, 
+          userID: userID, 
+        },
+      );
+      
+
+      setIsFavorited(response.data.favorite_status || false);
+    } catch (error) {
+      console.error("fail pull status", error);
+      setIsFavorited(false); 
+    }
+  };
+  useEffect(() => {
+    // console.log("car_ID changed:", car_ID);
+    // console.log("userToken changed:", userToken);
+  }, [car_ID, userToken]);
+  
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
-
-      return () => clearInterval(timer);
+    setIsFavorited(false); 
+    if (userToken && car_ID) {
+      checkFavoriteStatus(car_ID);
     }
-  }, [timeLeft]);
+  }, [car_ID, userToken]);
 
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
-  };
-
+  // จัดการ Favorite
   const handleFavoriteClick = async () => {
-    setIsFavorited(!isFavorited); // เปลี่ยนสถานะ favorite ก่อน
+    const newFavoriteStatus = !isFavorited;
+    setIsFavorited(newFavoriteStatus); 
+
     try {
-      // ส่งข้อมูล id ของรถไปยังเซิร์ฟเวอร์
-      const response = await axios.post('http://localhost:9500/favorites', {
-        id,
-      });
-      console.log(response.data); // Log การตอบกลับจากเซิร์ฟเวอร์ หากต้องการ
+ 
+      const response = await axios.post(
+        "http://localhost:9500/favorites",
+        {
+          car_ID: car_ID, 
+          userID: userID, 
+        },
+      );
+      // console.log(response.data); 
+      // console.log(userID);
+
     } catch (error) {
       console.error("Error updating favorite status", error);
     }
+
+    if (onFavoriteToggle) {
+      onFavoriteToggle(car_ID, newFavoriteStatus);
+    }
   };
+
 
   return (
     <div className="relative border rounded-3xl shadow-lg overflow-hidden max-w-sm bg-white">
       {/* ปุ่ม Favorite */}
-      <div className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md cursor-pointer">
+      <div
+        className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md cursor-pointer"
+        onClick={handleFavoriteClick}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-6 w-6 ${
-            isFavorited ? "text-red-500" : "text-gray-500"
-          } transition-colors duration-300`}
+          className={`h-6 w-6 ${isFavorited ? "text-red-500" : "text-gray-500"} transition-colors duration-300`}
           fill={isFavorited ? "currentColor" : "none"}
           viewBox="0 0 24 24"
           stroke="currentColor"
-          onClick={handleFavoriteClick}
         >
-          <path 
+          <path
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={isFavorited ? 0 : 2}
@@ -65,8 +107,6 @@ const CarCard = ({ id, carImage, carModel, status, countdownTime, detailsLink })
         <h2 className="text-2xl font-semibold">{carModel}</h2>
         {/* สถานะ */}
         <p className="text-lg text-gray-500 mt-2">{status}</p>
-        {/* เวลาเหลือ */}
-        <p className="text-lg font-semibold mt-4">Time left: {formatTime(timeLeft)}</p>
         {/* ปุ่ม View Details */}
         <div className="flex justify-center mt-6">
           <a

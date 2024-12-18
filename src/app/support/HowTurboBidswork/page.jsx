@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
+import Navbar from '../../../../src/app/components/Navbar';
+import Footer from '../../../../src/app/components/Footer';
 import "../../globals.css";
 
 const features = [

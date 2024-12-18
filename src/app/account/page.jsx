@@ -1,29 +1,60 @@
 "use client";
 
 import React, { useState } from "react";
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "../globals.css";
+import { getUserIdFromToken } from "@/app/utils/auth";
 
 export default function AccountSetting() {
+  const userID = getUserIdFromToken(); // ดึง user_id ออกจาก token
+
   const [formData, setFormData] = useState({
+    UserID: userID,
     firstName: "",
     lastName: "",
-    displayName: "",
-    email: "",
+    Username: "",
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+  const [message, setMessage] = useState(""); // สำหรับแสดงผลข้อความสำเร็จหรือข้อผิดพลาด
 
+  // ฟังก์ชันที่ใช้สำหรับอัปเดตค่าในฟอร์ม
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Saved Data:", formData);
+  // ฟังก์ชันที่ใช้ส่งข้อมูลเมื่อกดปุ่ม "Save Changes"
+  const handleSubmit = async (e) => {
+    e.preventDefault();  // หยุดการทำงานของ form default
+
+    // ตรวจสอบว่า password ใหม่กับการยืนยันตรงกันหรือไม่
+    if (formData.newPassword !== formData.confirmPassword) {
+      setMessage("New Password and Confirm Password do not match.");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:9500/api/user/userupdate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),  // ส่งข้อมูลทั้งหมดใน formData
+      });
+
+      const result = await res.json();  // แปลง response เป็น JSON
+      if (res.ok) {
+        setMessage("Profile updated successfully.");
+      } else {
+        setMessage(result.error || "An error occurred during update.");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      setMessage("An unexpected error occurred.");
+    }
   };
 
   return (
@@ -39,6 +70,11 @@ export default function AccountSetting() {
 
           {/* Form */}
           <form onSubmit={handleSubmit}>
+            {message && (
+              <div className="mb-4 text-center text-red-500 font-bold">
+                {message}
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block text-gray-700 mb-2">First Name</label>
@@ -46,7 +82,7 @@ export default function AccountSetting() {
                   type="text"
                   name="firstName"
                   value={formData.firstName}
-                  onChange={handleChange}
+                  onChange={handleChange} // อัปเดตค่าฟอร์ม
                   className="w-full border rounded-lg p-3 focus:outline-blue-400"
                 />
               </div>
@@ -56,7 +92,7 @@ export default function AccountSetting() {
                   type="text"
                   name="lastName"
                   value={formData.lastName}
-                  onChange={handleChange}
+                  onChange={handleChange} // อัปเดตค่าฟอร์ม
                   className="w-full border rounded-lg p-3 focus:outline-blue-400"
                 />
               </div>
@@ -65,19 +101,9 @@ export default function AccountSetting() {
               <label className="block text-gray-700 mb-2">Display Name</label>
               <input
                 type="text"
-                name="displayName"
-                value={formData.displayName}
-                onChange={handleChange}
-                className="w-full border rounded-lg p-3 focus:outline-blue-400"
-              />
-            </div>
-            <div className="mb-6">
-              <label className="block text-gray-700 mb-2">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
+                name="Username"
+                value={formData.Username}
+                onChange={handleChange} // อัปเดตค่าฟอร์ม
                 className="w-full border rounded-lg p-3 focus:outline-blue-400"
               />
             </div>
@@ -90,7 +116,7 @@ export default function AccountSetting() {
                 type="password"
                 name="currentPassword"
                 value={formData.currentPassword}
-                onChange={handleChange}
+                onChange={handleChange} // อัปเดตค่าฟอร์ม
                 className="w-full border rounded-lg p-3 focus:outline-blue-400"
               />
             </div>
@@ -100,7 +126,7 @@ export default function AccountSetting() {
                 type="password"
                 name="newPassword"
                 value={formData.newPassword}
-                onChange={handleChange}
+                onChange={handleChange} // อัปเดตค่าฟอร์ม
                 className="w-full border rounded-lg p-3 focus:outline-blue-400"
               />
             </div>
@@ -110,7 +136,7 @@ export default function AccountSetting() {
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
-                onChange={handleChange}
+                onChange={handleChange} // อัปเดตค่าฟอร์ม
                 className="w-full border rounded-lg p-3 focus:outline-blue-400"
               />
             </div>
