@@ -34,7 +34,7 @@ export function Footer() {
   };
 
   return (
-    <div className="bg-[#2A2F6E] pt-6 pb-6 font-happy text-2xl">
+    <div className="bg-[#2A2F6E] pt-6 pb-6 font-happy text-xl md:text-2xl">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo and Company Info Section */}
         <div className="flex flex-col space-y-4">
@@ -49,7 +49,7 @@ export function Footer() {
               Ratchadapisek Road, Khlong Toei, Bangkok
             </p>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-col space-y-4 items-start md:flex items-start space-y-4">
             <Link
               href="tel:02-222-2222"
               className="flex items-center space-x-2 bg-green-600 text-white px-3 py-1 rounded-full"
@@ -156,7 +156,7 @@ export function Footer() {
           </div>
           <div>
             <h2 className="text-3xl text-orange-500 ">Download!</h2>
-            <div className="flex flex-col">
+            <div className="flex flex-col space-y-4">
               <Link href="https://play.google.com/store">
                 <Image
                   src="/IMG/GooglePlay_Logo.png"
