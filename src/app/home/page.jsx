@@ -104,14 +104,11 @@ function Page() {
             used, wholesale and repairable vehicles. We make it easy for
             Members to find, bid on, and win vehicles like classic cars, boats,
             repo cars, ATVs, exotics, motorcycles and more.
-            <br className="mb-2" />
             Turbobids car auctions have something for everyone used car buyers,
             dismantlers, dealers, body shops and individuals.
-            <br className="mb-2" />
             We even have “No License Required” vehicles available to individuals in public auto
             auctions. We feature clean & salvage title cars, SUVs 
             heavy equipment & more in live online auto auctions every weekday.
-            <br className="mb-2" />
             As a global used car auction company, Turbobids puts
             the power to bid and win into your hands. Sign up for a Basic or
             Premier Membership to start bidding and winning used car auctions.
@@ -125,7 +122,7 @@ function Page() {
             <Carousel
               autoPlay
               infiniteLoop
-              interval={4000}
+              interval={2000}
               showArrows={false}
               showStatus={false}
               dynamicHeight={false}
