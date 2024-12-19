@@ -80,10 +80,7 @@ const CarCard = ({
   return (
     <div className="relative border rounded-3xl shadow-lg overflow-hidden max-w-sm bg-white">
       {/* ปุ่ม Favorite */}
-      <div
-        className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md cursor-pointer"
-        onClick={handleFavoriteClick}
-      >
+      <div className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md cursor-pointer" onClick={handleFavoriteClick}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className={`h-6 w-6 ${isFavorited ? "text-red-500" : "text-gray-500"} transition-colors duration-300`}

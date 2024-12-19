@@ -5,6 +5,7 @@ import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import { useParams, useRouter } from "next/navigation";
 import { getUserIdFromToken } from '@/app/utils/auth';
+import "../../../globals.css"
 
 
 const VehicleDetail = () => {
@@ -92,7 +93,6 @@ const VehicleDetail = () => {
     const auctionEndDateTime = new Date(auctionEndDateTimeString);
     console.log('Auction End DateTime Object:', auctionEndDateTime);
   
-    // เพิ่ม 1 วันเข้าไปใน Date object
     auctionEndDateTime.setDate(auctionEndDateTime.getDate() + 1);
   
     
@@ -100,20 +100,18 @@ const VehicleDetail = () => {
     console.log('Current Date and Time:', now);
 
     
-    // เปรียบเทียบเวลาปัจจุบันกับเวลาสิ้นสุดการประมูล
+
     if (now >= auctionEndDateTime) {
       setBidStatus("Closed");
       setIsAuctionEnded(true);
       setTimeLeft("00:00:00");
-      return; // การประมูลสิ้นสุดแล้ว ไม่ต้องตั้งค่าตัวนับเวลา
+      return; 
     } else if (now < auctionStartDateTime) {
-      // การประมูลยังไม่เริ่ม
       setIsAuctionStarted(false);
       setBidStatus("Coming Soon");
       setTimeLeft("Coming Soon");
       return;
     } else {
-      // การประมูลกำลังดำเนินอยู่
       setIsAuctionStarted(true);
       setBidStatus("Open");
       setIsAuctionEnded(false);
@@ -142,10 +140,10 @@ const VehicleDetail = () => {
       const timeRemaining = calculateTimeLeft();
       setTimeLeft(timeRemaining);
   
-      // ตรวจสอบว่าการประมูลสิ้นสุดหรือยัง
+
       if (timeRemaining === "00:00:00") {
         setIsAuctionEnded(true);
-        clearInterval(timerId); // Stop the timer
+        clearInterval(timerId); 
       }
     };
   
@@ -169,7 +167,6 @@ const VehicleDetail = () => {
       const carResponse = await axios.get(`http://localhost:9500/api/detail/${carID}`);
       setCar(carResponse.data);
 
-      // Optionally refresh bid history or other relevant data after submitting
       const historyResponse = await axios.get(`http://localhost:9500/api/bidhistory/${carID}`);
       setHistory(historyResponse.data);
 
@@ -187,13 +184,12 @@ const VehicleDetail = () => {
 
   
       if (data.success) {
-        // ผู้ใช้ปัจจุบันเป็นผู้ประมูลสูงสุด
         alert(data.message || "Complete");
-        router.push('/auction/completed'); // เปลี่ยน URL ตามต้องการ
+        router.push(`/confirm?car_id=${carID}&user_id=${userID}`);
       } else {
-        // ผู้ใช้ปัจจุบันไม่ใช่ผู้ประมูลสูงสุด หรือเกิดข้อผิดพลาด
+
         alert(data.message || "เกิดข้อผิดพลาด");
-        router.back(); // ย้อนกลับไปหน้าก่อนหน้า (ถ้าต้องการ)
+        router.back(); 
       }
     } catch (error) {
       console.error("Error completing auction:", error);
@@ -205,11 +201,12 @@ const VehicleDetail = () => {
   if (error) return <div>{error}</div>;
 
   return (
+    <div className="font-happy">
     <div className="bg-gray-100 min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 max-w-7xl mx-auto px-4 py-6">
         <div className="mb-4">
-          <h1 className="text-2xl font-bold">{car?.car_brand} {car?.car_model}</h1>
+          <h1 className="text-3xl font-bold">{car?.car_year} {car?.car_brand} {car?.car_model}</h1>
         </div>
 
         <div className="flex flex-wrap lg:flex-nowrap gap-6">
@@ -237,8 +234,8 @@ const VehicleDetail = () => {
 
           <div className="w-full lg:w-1/3 space-y-6">
             <div className="bg-white p-4 rounded-md shadow">
-              <h2 className="text-lg font-semibold border-b pb-2">Vehicle Details</h2>
-              <ul className="text-sm mt-2 space-y-1 text-gray-700">
+              <h2 className="text-xl font-semibold border-b pb-2">Vehicle Details</h2>
+              <ul className="text-lg mt-2 space-y-1 text-gray-700">
                 <li>Car ID: <span className="font-medium">{car?.car_ID}</span></li>
                 <li>Odometer: <span className="font-medium">{car?.odometer} mi</span></li>
                 <li>Primary Damage: <span className="font-medium">{car?.primary_damage}</span></li>
@@ -252,19 +249,19 @@ const VehicleDetail = () => {
             </div>
 
             <div className="bg-white p-4 rounded-md shadow">
-              <h2 className="text-lg font-semibold border-b pb-2">Bid Information</h2>
-              <p className="text-sm mt-2">
+              <h2 className="text-xl font-semibold border-b pb-2">Bid Information</h2>
+              <p className="text-lg mt-2">
                 Bid Status: <span className={`text-${bidStatus === "Closed" ? "red" : "green"}-500`}>{bidStatus}</span>
               </p>
-              <p className="text-sm text-red-500">Time Left: {timeLeft}</p>
-              <p className="text-sm">
+              <p className="text-lg text-red-500">Time Left: {timeLeft}</p>
+              <p className="text-lg">
                 Current Bid: <span className="font-bold">{car?.current_bid} USD</span>
               </p>
 
               <div className="mt-4">
                 {isAuctionEnded ? (
                   <button
-                    className="w-full bg-blue-500 text-white py-2 rounded-md mt-2 hover:bg-blue-600"
+                    className="text-lg w-full bg-blue-500 text-white py-2 rounded-md mt-2 hover:bg-blue-600"
                     onClick={handleCompleteAuction}
                   >
                     Complete Auction
@@ -278,7 +275,7 @@ const VehicleDetail = () => {
                   </button>
                 ) :(
                   <>
-                    <label className="block text-sm font-semibold mb-1">Your Bid:</label>
+                    <label className="block text-lg font-semibold mb-1">Your Bid:</label>
                     <input
                       type="number"
                       value={bidAmount}
@@ -286,7 +283,7 @@ const VehicleDetail = () => {
                       placeholder="Enter Number"
                       className="w-full border rounded-md px-2 py-1 mt-2"
                     />
-                    <p className="text-sm text-gray-500 mt-1">{car?.bid_increment} USD Bid Increment</p>
+                    <p className="text-lg text-gray-500 mt-1">{car?.bid_increment} USD Bid Increment</p>
                     <button
                       className="w-full bg-orange-500 text-white py-2 rounded-md mt-2 hover:bg-orange-600"
                       onClick={handleBidSubmit}
@@ -302,7 +299,7 @@ const VehicleDetail = () => {
 
         <div className="bg-white p-4 rounded-md shadow mt-6">
           <h2 className="text-lg font-semibold border-b pb-2">History Bid</h2>
-          <ul className="text-sm mt-2 space-y-2">
+          <ul className="text-lg mt-2 space-y-2">
             {history.length > 0 ? (
               history
                 .sort((a, b) => b.bid_amount - a.bid_amount) // เรียงจากมากไปหาน้อย
@@ -320,6 +317,7 @@ const VehicleDetail = () => {
         </div>
       </main>
       <Footer />
+    </div>
     </div>
   );
 };

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export default function Home() {
   const [users, setUsers] = useState([]);
-  const [cars, setCars] = useState([]); // State สำหรับข้อมูลรถยนต์
+  const [cars, setCars] = useState([]); 
   const [newCar, setNewCar] = useState({
     car_brand: '',
     car_model: '',
@@ -33,13 +33,11 @@ export default function Home() {
     bid_increment: ''
   }); 
 
-  // ดึงข้อมูลผู้ใช้
   useEffect(() => {
     fetchUsers();
-    fetchCars(); // เรียกใช้ฟังก์ชันดึงข้อมูลรถยนต์
+    fetchCars(); 
   }, []);
 
-  // ฟังก์ชันดึงข้อมูลผู้ใช้
   const fetchUsers = () => {
     fetch('http://localhost:9500/api/users')
       .then(res => res.json())
@@ -57,7 +55,6 @@ export default function Home() {
     }
   };
 
-  // ฟังก์ชันลบผู้ใช้
   const deleteUser = (userID) => {
     console.log(userID);
     if (confirm('Are you sure you want to delete this user?')) {
@@ -65,13 +62,12 @@ export default function Home() {
         method: 'DELETE',
       })
         .then(() => {
-          window.location.reload(); // รีเฟรชหน้าเว็บเมื่อการลบเสร็จสิ้น
+          window.location.reload(); 
         })
         .catch(err => console.error('Error deleting user:', err));
     }
   };
 
-  // ฟังก์ชันเพิ่มรถยนต์
   const addCar = () => {
     fetch('http://localhost:9500/api/addCar', {
       method: 'POST',
@@ -82,12 +78,11 @@ export default function Home() {
     })
       .then(() => {
         alert('Car added successfully!');
-        fetchCars(); // ดึงข้อมูลรถใหม่
+        fetchCars(); 
       })
       .catch(err => console.error('Error adding car:', err));
   };
 
-  // ฟังก์ชันลบรถยนต์
 const deleteCar = async (carID) => {
   if (confirm('Are you sure you want to delete this car?')) {
     try {
@@ -96,8 +91,7 @@ const deleteCar = async (carID) => {
       });
 
       if (response.ok) {
-        // รีเฟรชข้อมูลรถยนต์
-        fetchCars(); // ดึงข้อมูลรถใหม่
+        fetchCars(); 
         alert('Car deleted successfully!');
       } else {
         alert('Failed to delete car');
@@ -109,8 +103,6 @@ const deleteCar = async (carID) => {
   }
 };
 
-
-  // ฟังก์ชันอัพเดตค่าใน state เมื่อมีการกรอกข้อมูลในฟอร์ม
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewCar(prevState => ({
@@ -316,113 +308,124 @@ const deleteCar = async (carID) => {
 
   {/* Auction Fields */}
   <div className="col-span-8 md:col-span-4">
-          <input
-            type="date"
-            name="auction_start_date"
-            placeholder="Auction Start Date"
-            value={newCar.auction_start_date}
-            onChange={handleInputChange}
-            className="p-2 border rounded w-full"
-          />
-        </div>
-        <div className="col-span-8 md:col-span-4">
-          <input
-            type="date"
-            name="auction_end_date"
-            placeholder="Auction End Date"
-            value={newCar.auction_end_date}
-            onChange={handleInputChange}
-            className="p-2 border rounded w-full"
-          />
-        </div>
-        <div className="col-span-8 md:col-span-4">
-          <input
-            type="time"
-            name="auction_start_time"
-            placeholder="Auction Start Time"
-            value={newCar.auction_start_time}
-            onChange={handleInputChange}
-            className="p-2 border rounded w-full"
-          />
-        </div>
-        <div className="col-span-8 md:col-span-4">
-          <input
-            type="time"
-            name="auction_end_time"
-            placeholder="Auction End Time"
-            value={newCar.auction_end_time}
-            onChange={handleInputChange}
-            className="p-2 border rounded w-full"
-          />
-        </div>
-        <div className="col-span-8 md:col-span-4">
-          <input
-            type="text"
-            name="auction_status"
-            placeholder="Auction Status"
-            value={newCar.auction_status}
-            onChange={handleInputChange}
-            className="p-2 border rounded w-full"
-          />
-        </div>
-        <div className="col-span-8 md:col-span-4">
-          <input
-            type="number"
-            name="auction_starting_price"
-            placeholder="Auction Starting Price"
-            value={newCar.auction_starting_price}
-            onChange={handleInputChange}
-            className="p-2 border rounded w-full"
-          />
-        </div>
-        <div className="col-span-8 md:col-span-4">
-          <input
-            type="number"
-            name="auction_minimum_price"
-            placeholder="Auction Minimum Price"
-            value={newCar.auction_minimum_price}
-            onChange={handleInputChange}
-            className="p-2 border rounded w-full"
-          />
-        </div>
-        <div className="col-span-8 md:col-span-4">
-          <input
-            type="number"
-            name="auction_current_price"
-            placeholder="Auction Current Price"
-            value={newCar.auction_current_price}
-            onChange={handleInputChange}
-            className="p-2 border rounded w-full"
-          />
-        </div>
-        {/* New Inputs for current_bid and bid_increment */}
-        <div className="col-span-8 md:col-span-4">
-          <input
-            type="number"
-            name="current_bid"
-            placeholder="Current Bid"
-            value={newCar.current_bid}
-            onChange={handleInputChange}
-            className="p-2 border rounded w-full"
-          />
-        </div>
-        <div className="col-span-8 md:col-span-4">
-          <input
-            type="number"
-            name="bid_increment"
-            placeholder="Bid Increment"
-            value={newCar.bid_increment}
-            onChange={handleInputChange}
-            className="p-2 border rounded w-full"
-          />
-        </div>
-        <div className="col-span-8">
-          <button
-            onClick={addCar}
-            className="bg-blue-500 text-white px-4 py-2 rounded w-full">
-      Add Car
-    </button>
-  </div>
+  <p2 className="mb-2 block font-semibold">Auction Start Date</p2>
+  <input
+    type="date"
+    name="auction_start_date"
+    placeholder="Auction Start Date"
+    value={newCar.auction_start_date}
+    onChange={handleInputChange}
+    className="p-2 border rounded w-full"
+  />
+</div>
+<div className="col-span-8 md:col-span-4">
+  <p2 className="mb-2 block font-semibold">Auction End Date</p2>
+  <input
+    type="date"
+    name="auction_end_date"
+    placeholder="Auction End Date"
+    value={newCar.auction_end_date}
+    onChange={handleInputChange}
+    className="p-2 border rounded w-full"
+  />
+</div>
+<div className="col-span-8 md:col-span-4">
+  <p2 className="mb-2 block font-semibold">Auction Start Time</p2>
+  <input
+    type="time"
+    name="auction_start_time"
+    placeholder="Auction Start Time"
+    value={newCar.auction_start_time}
+    onChange={handleInputChange}
+    className="p-2 border rounded w-full"
+  />
+</div>
+<div className="col-span-8 md:col-span-4">
+  <p2 className="mb-2 block font-semibold">Auction End Time</p2>
+  <input
+    type="time"
+    name="auction_end_time"
+    placeholder="Auction End Time"
+    value={newCar.auction_end_time}
+    onChange={handleInputChange}
+    className="p-2 border rounded w-full"
+  />
+</div>
+<div className="col-span-8 md:col-span-4">
+  <p2 className="mb-2 block font-semibold">Auction Status</p2>
+  <input
+    type="text"
+    name="auction_status"
+    placeholder="Auction Status"
+    value={newCar.auction_status}
+    onChange={handleInputChange}
+    className="p-2 border rounded w-full"
+  />
+</div>
+<div className="col-span-8 md:col-span-4">
+  <p2 className="mb-2 block font-semibold">Auction Starting Price</p2>
+  <input
+    type="number"
+    name="auction_starting_price"
+    placeholder="Auction Starting Price"
+    value={newCar.auction_starting_price}
+    onChange={handleInputChange}
+    className="p-2 border rounded w-full"
+  />
+</div>
+<div className="col-span-8 md:col-span-4">
+  <p2 className="mb-2 block font-semibold">Auction Minimum Price</p2>
+  <input
+    type="number"
+    name="auction_minimum_price"
+    placeholder="Auction Minimum Price"
+    value={newCar.auction_minimum_price}
+    onChange={handleInputChange}
+    className="p-2 border rounded w-full"
+  />
+</div>
+<div className="col-span-8 md:col-span-4">
+  <p2 className="mb-2 block font-semibold">Auction Current Price</p2>
+  <input
+    type="number"
+    name="auction_current_price"
+    placeholder="Auction Current Price"
+    value={newCar.auction_current_price}
+    onChange={handleInputChange}
+    className="p-2 border rounded w-full"
+  />
+</div>
+<div className="col-span-8 md:col-span-4">
+  <p2 className="mb-2 block font-semibold">Current Bid</p2>
+  <input
+    type="number"
+    name="current_bid"
+    placeholder="Current Bid"
+    value={newCar.current_bid}
+    onChange={handleInputChange}
+    className="p-2 border rounded w-full"
+  />
+</div>
+<div className="col-span-8 md:col-span-4">
+  <p2 className="mb-2 block font-semibold">Bid Increment</p2>
+  <input
+    type="number"
+    name="bid_increment"
+    placeholder="Bid Increment"
+    value={newCar.bid_increment}
+    onChange={handleInputChange}
+    className="p-2 border rounded w-full"
+  />
+</div>
+<div className="col-span-8">
+  <button
+    onClick={addCar}
+    className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+  >
+    Add Car
+  </button>
+</div>
+
 </div>
 
     </div>

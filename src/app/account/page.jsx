@@ -1,36 +1,62 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../globals.css";
 import { getUserIdFromToken } from "@/app/utils/auth";
 
 export default function AccountSetting() {
-  const userID = getUserIdFromToken(); // ดึง user_id ออกจาก token
+  const userID = getUserIdFromToken(); 
 
   const [formData, setFormData] = useState({
     UserID: userID,
     firstName: "",
     lastName: "",
     Username: "",
+    email: "", 
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
-  const [message, setMessage] = useState(""); // สำหรับแสดงผลข้อความสำเร็จหรือข้อผิดพลาด
+  const [message, setMessage] = useState(""); 
 
-  // ฟังก์ชันที่ใช้สำหรับอัปเดตค่าในฟอร์ม
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch(`http://localhost:9500/api/user/${userID}`);
+        if (res.ok) {
+          const data = await res.json();
+          setFormData((prevState) => ({
+            ...prevState,
+            firstName: data.firstname,
+            lastName: data.lastname,
+            Username: data.Username,
+            email: data.email, 
+          }));
+        } else {
+          setMessage("Error fetching user data.");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setMessage("An unexpected error occurred.");
+      }
+    };
+
+    fetchUserData();
+  }, [userID]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
-  // ฟังก์ชันที่ใช้ส่งข้อมูลเมื่อกดปุ่ม "Save Changes"
   const handleSubmit = async (e) => {
-    e.preventDefault();  // หยุดการทำงานของ form default
+    e.preventDefault();
 
-    // ตรวจสอบว่า password ใหม่กับการยืนยันตรงกันหรือไม่
     if (formData.newPassword !== formData.confirmPassword) {
       setMessage("New Password and Confirm Password do not match.");
       return;
@@ -42,12 +68,18 @@ export default function AccountSetting() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),  // ส่งข้อมูลทั้งหมดใน formData
+        body: JSON.stringify(formData),
       });
 
-      const result = await res.json();  // แปลง response เป็น JSON
+      const result = await res.json();
       if (res.ok) {
         setMessage("Profile updated successfully.");
+        setFormData((prevState) => ({
+          ...prevState,
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        }));
       } else {
         setMessage(result.error || "An error occurred during update.");
       }
@@ -59,16 +91,16 @@ export default function AccountSetting() {
 
   return (
     <div className="min-h-screen bg-gray-100 font-happy text-lg">
-      {/* Navbar */}
       <Navbar />
       <div className="flex justify-center items-center py-10">
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8">
-          {/* Profile Image */}
           <div className="flex justify-center mb-6">
-            <div className="w-24 h-24 bg-gray-300 rounded-full"></div>
+            <img
+              src="https://i.namu.wiki/i/P0Wo_FxNXLiIP879hbjvTttcDZzOWtjNds_mu5Lofyim3oc4vncV2lMokmx1zcBhHmNmcWKVdcFGxUugYkKdsA.webp"
+              alt="รูปโปรไฟล์"
+              className="w-24 h-24 rounded-full object-cover"
+            />
           </div>
-
-          {/* Form */}
           <form onSubmit={handleSubmit}>
             {message && (
               <div className="mb-4 text-center text-red-500 font-bold">
@@ -80,35 +112,39 @@ export default function AccountSetting() {
                 <label className="block text-gray-700 mb-2">First Name</label>
                 <input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange} // อัปเดตค่าฟอร์ม
-                  className="w-full border rounded-lg p-3 focus:outline-blue-400"
+                  placeholder={formData.firstName || "First Name"}
+                  readOnly
+                  className="w-full border bg-gray-100 text-gray-600 rounded-lg p-3 focus:outline-none cursor-not-allowed"
                 />
               </div>
               <div>
                 <label className="block text-gray-700 mb-2">Last Name</label>
                 <input
                   type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange} // อัปเดตค่าฟอร์ม
-                  className="w-full border rounded-lg p-3 focus:outline-blue-400"
+                  placeholder={formData.lastName || "Last Name"}
+                  readOnly
+                  className="w-full border bg-gray-100 text-gray-600 rounded-lg p-3 focus:outline-none cursor-not-allowed"
                 />
               </div>
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Display Name</label>
+              <label className="block text-gray-700 mb-2">Username</label>
               <input
                 type="text"
-                name="Username"
-                value={formData.Username}
-                onChange={handleChange} // อัปเดตค่าฟอร์ม
-                className="w-full border rounded-lg p-3 focus:outline-blue-400"
+                placeholder={formData.Username || "Display Name"}
+                readOnly
+                className="w-full border bg-gray-100 text-gray-600 rounded-lg p-3 focus:outline-none cursor-not-allowed"
               />
             </div>
-
-            {/* Password Change Section */}
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Email</label>
+              <input
+                type="email"
+                placeholder={formData.email || "Email"}
+                readOnly
+                className="w-full border bg-gray-100 text-gray-600 rounded-lg p-3 focus:outline-none cursor-not-allowed"
+              />
+            </div>
             <h2 className="font-bold text-xl mb-4">Password Change</h2>
             <div className="mb-4">
               <label className="block text-gray-700 mb-2">Current Password</label>
@@ -116,7 +152,7 @@ export default function AccountSetting() {
                 type="password"
                 name="currentPassword"
                 value={formData.currentPassword}
-                onChange={handleChange} // อัปเดตค่าฟอร์ม
+                onChange={handleChange}
                 className="w-full border rounded-lg p-3 focus:outline-blue-400"
               />
             </div>
@@ -126,7 +162,7 @@ export default function AccountSetting() {
                 type="password"
                 name="newPassword"
                 value={formData.newPassword}
-                onChange={handleChange} // อัปเดตค่าฟอร์ม
+                onChange={handleChange}
                 className="w-full border rounded-lg p-3 focus:outline-blue-400"
               />
             </div>
@@ -136,12 +172,10 @@ export default function AccountSetting() {
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
-                onChange={handleChange} // อัปเดตค่าฟอร์ม
+                onChange={handleChange}
                 className="w-full border rounded-lg p-3 focus:outline-blue-400"
               />
             </div>
-
-            {/* Save Button */}
             <div className="flex justify-center">
               <button
                 type="submit"
@@ -153,8 +187,6 @@ export default function AccountSetting() {
           </form>
         </div>
       </div>
-
-      {/* Footer */}
       <Footer />
     </div>
   );

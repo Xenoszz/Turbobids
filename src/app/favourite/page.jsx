@@ -18,7 +18,7 @@ export default function FavoritePage() {
     const fetchFavorites = async () => {
       try {
         const response = await axios.post('http://localhost:9500/showfavorite', {
-          userID: userID, // ส่ง userID ใน body
+          userID: userID, 
         });
         setFavorites(response.data);
       } catch (error) {
@@ -31,7 +31,7 @@ export default function FavoritePage() {
     }
   }, [userID]);
 
-  // ฟังก์ชันจัดเรียงรถ
+
   const getSortedCars = () => {
     let sortedCars = [...favorites];
 
@@ -43,10 +43,10 @@ export default function FavoritePage() {
         sortedCars.sort((a, b) => b.car_year - a.car_year);
         break;
       case 'Price Ascending':
-        sortedCars.sort((a, b) => parseFloat(a.car_price) - parseFloat(b.car_price));
+        sortedCars.sort((a, b) => parseFloat(a.current_bid) - parseFloat(b.current_bid));
         break;
       case 'Price Descending':
-        sortedCars.sort((a, b) => parseFloat(b.car_price) - parseFloat(a.car_price));
+        sortedCars.sort((a, b) => parseFloat(b.current_bid) - parseFloat(a.current_bid));
         break;
       default:
         break;
@@ -105,14 +105,14 @@ export default function FavoritePage() {
             <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
               <img
                 className="w-full h-48 object-cover"
-                src={car.image || "https://via.placeholder.com/400x250"}
+                src={car.image || "/IMG/catcar.jpg"}
                 alt={`Car ${car.car_year} ${car.car_model}`}
               />
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-gray-900">{`${car.car_year} ${car.car_brand} ${car.car_model}`}</h3>
                 <p className="text-sm text-gray-500">Details: {car.car_details}</p>
                 <p className="text-sm text-gray-500">Status: {car.car_status}</p>
-                <p className="text-lg font-semibold text-gray-900">Current Bid: {car.car_price} $</p>
+                <p className="text-lg font-semibold text-gray-900">Current Bid: {car.current_bid} $</p>
               </div>
             </div>
           ))}

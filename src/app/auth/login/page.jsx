@@ -26,7 +26,7 @@ function LoginPage() {
     //             headers: {
     //                 "Content-Type": "application/json",
     //             },
-    //             body: JSON.stringify({ email: email, password }), // ส่งข้อมูลไปที่ API
+    //             body: JSON.stringify({ email: email, password }), 
     //             credentials: 'include',
     //         });
 
@@ -51,24 +51,16 @@ function LoginPage() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email: email, password }), // ส่งข้อมูลไปที่ API
-                credentials: 'include', // ส่งคุกกี้ (ถ้าจำเป็น)
+                body: JSON.stringify({ email: email, password }), 
+                credentials: 'include', 
             });
-        
-            const data = await res.json(); // รอให้ response กลับมาในรูปแบบ JSON
-        
+            const data = await res.json(); 
             if (res.ok) {
-                // ถ้า login สำเร็จ และมี token ใน response
-                const token = data.token; // ดึง token จาก data ที่ได้รับ
+                const token = data.token; 
                 console.log('Received token:', token);
-        
-                // เก็บ token ใน localStorage หรือ sessionStorage
                 localStorage.setItem('token', token);
-        
-                // รีไดเรกต์ไปหน้า home
                 router.push('/home');
             } else {
-                // ถ้าเกิดข้อผิดพลาด, แสดงข้อความผิดพลาด
                 seterror(data.message || "Login failed");
             }
         } catch (error) {
@@ -77,8 +69,6 @@ function LoginPage() {
         }
         
     };
-
-
 
 
 

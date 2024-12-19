@@ -60,7 +60,6 @@ function RegisterPage() {
     //     return;
     //   }
 
-      // Check if user exists on localhost:6000
       const resCheckUser6000 = await fetch("http://localhost:9500/api/auth/checkuser", {
         method: "POST",
         headers: {
@@ -76,7 +75,7 @@ function RegisterPage() {
         return;
       }
 
-      // Register new user on localhost:6000
+
       const resRegister6000 = await fetch("http://localhost:9500/api/auth/register", {
         method: "POST",
         headers: {
@@ -92,7 +91,7 @@ function RegisterPage() {
       }
 
       // Success
-      setError(""); // Clear any previous errors
+      setError(""); 
       setSuccess("User registration successful on both servers!");
       router.push("/auth/login");
     } catch (error) {
